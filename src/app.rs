@@ -1,25 +1,22 @@
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)] // if we add new fields, give them default values when deserializing old state
-pub struct TemplateApp {
-    // Example stuff:
-    label: String,
-
-    #[serde(skip)] // This how you opt-out of serialization of a field
-    value: f32,
+pub struct CalculatorApp {
+    value: f64,
+    answer: f64,
 }
 
-impl Default for TemplateApp {
+impl Default for CalculatorApp {
     fn default() -> Self {
         Self {
             // Example stuff:
-            label: "Hello World!".to_owned(),
-            value: 2.7,
+            value: 0.0,
+            answer: 0.0,
         }
     }
 }
 
-impl TemplateApp {
+impl CalculatorApp {
     /// Called once before the first frame.
     pub fn new(cc: &eframe::CreationContext<'_>) -> Self {
         // This is also where you can customize the look and feel of egui using
@@ -35,7 +32,7 @@ impl TemplateApp {
     }
 }
 
-impl eframe::App for TemplateApp {
+impl eframe::App for CalculatorApp {
     /// Called by the frame work to save state before shutdown.
     fn save(&mut self, storage: &mut dyn eframe::Storage) {
         eframe::set_value(storage, eframe::APP_KEY, self);
@@ -67,43 +64,61 @@ impl eframe::App for TemplateApp {
 
         egui::CentralPanel::default().show(ctx, |ui| {
             // The central panel the region left after adding TopPanel's and SidePanel's
-            ui.heading("eframe template");
+            ui.heading("calculator");
 
             ui.horizontal(|ui| {
-                ui.label("Write something: ");
-                ui.text_edit_singleline(&mut self.label);
+                ui.label(&format!("{}", self.answer));
             });
 
-            ui.add(egui::Slider::new(&mut self.value, 0.0..=10.0).text("value"));
-            if ui.button("Increment").clicked() {
-                self.value += 1.0;
-            }
+            ui.horizontal(|ui| {
+                if ui.button("7").clicked() {
+                    self.answer = 7.0
+                };
+                if ui.button("8").clicked() {
+                    self.answer = 8.0
+                };
+                if ui.button("9").clicked() {
+                    self.answer = 9.0
+                };
+                if ui.button("/").clicked() {};
+            });
 
-            ui.separator();
+            ui.horizontal(|ui| {
+                if ui.button("4").clicked() {
+                    self.answer = 4.0
+                };
+                if ui.button("5").clicked() {
+                    self.answer = 5.0
+                };
+                if ui.button("6").clicked() {
+                    self.answer = 6.0
+                };
+                if ui.button("x").clicked() {};
+            });
 
-            ui.add(egui::github_link_file!(
-                "https://github.com/emilk/eframe_template/blob/master/",
-                "Source code."
-            ));
+            ui.horizontal(|ui| {
+                if ui.button("1").clicked() {
+                    self.answer = 1.0
+                };
+                if ui.button("2").clicked() {
+                    self.answer = 2.0
+                };
+                if ui.button("3").clicked() {
+                    self.answer = 3.0
+                };
+                if ui.button("-").clicked() {};
+            });
 
-            ui.with_layout(egui::Layout::bottom_up(egui::Align::LEFT), |ui| {
-                powered_by_egui_and_eframe(ui);
-                egui::warn_if_debug_build(ui);
+            ui.horizontal(|ui| {
+                if ui.button("0").clicked() {
+                    self.answer = 0.0
+                };
+                if ui.button("C").clicked() {
+                    self.answer = 0.0
+                };
+                if ui.button("=").clicked() {};
+                if ui.button("+").clicked() {};
             });
         });
     }
-}
-
-fn powered_by_egui_and_eframe(ui: &mut egui::Ui) {
-    ui.horizontal(|ui| {
-        ui.spacing_mut().item_spacing.x = 0.0;
-        ui.label("Powered by ");
-        ui.hyperlink_to("egui", "https://github.com/emilk/egui");
-        ui.label(" and ");
-        ui.hyperlink_to(
-            "eframe",
-            "https://github.com/emilk/egui/tree/master/crates/eframe",
-        );
-        ui.label(".");
-    });
 }
