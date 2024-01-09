@@ -9,7 +9,6 @@ pub struct CalculatorApp {
 impl Default for CalculatorApp {
     fn default() -> Self {
         Self {
-            // Example stuff:
             value: 0.0,
             answer: 0.0,
         }
