@@ -1,5 +1,24 @@
 # Calculator
 
+Simple calculator to learn rust
+
+# To run
+
+## For native
+
+```sh
+cargo run
+```
+
+## For web
+
+```sh
+rustup target add wasm32-unknown-unknown
+cargo install --locked trunk
+trunk serve --open
+```
+
+
 ## License
 
 All code in this repository is dual-licensed under either:
