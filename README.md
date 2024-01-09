@@ -4,6 +4,14 @@ Simple calculator to learn rust
 
 # To run
 
+## Via github code space
+
+See codespace setup instructions [here](https://c-git.github.io/github/codespaces/#install-rust-with-trunk) then just use the following command.
+
+```sh
+trunk serve
+```
+
 ## For native
 
 ```sh
@@ -17,7 +25,6 @@ rustup target add wasm32-unknown-unknown
 cargo install --locked trunk
 trunk serve --open
 ```
-
 
 ## License
 
