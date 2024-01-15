@@ -2,14 +2,14 @@
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)] // if we add new fields, give them default values when deserializing old state
 pub struct CalculatorApp {
-    value: f64,
+    value: Option<f64>,
     answer: f64,
 }
 
 impl Default for CalculatorApp {
     fn default() -> Self {
         Self {
-            value: 0.0,
+            value: None,
             answer: 0.0,
         }
     }
@@ -31,7 +31,11 @@ impl CalculatorApp {
     }
 
     fn click_number(&mut self, number: f64) {
-        self.answer = self.answer * 10.0 + number;
+        self.value = if let Some(value) = self.value {
+            Some(value * 10.0 + number)
+        } else {
+            Some(number)
+        };
     }
 }
 
@@ -70,7 +74,14 @@ impl eframe::App for CalculatorApp {
             ui.heading("Calculator");
 
             ui.with_layout(egui::Layout::right_to_left(egui::Align::TOP), |ui| {
-                ui.label(&format!("{}", self.answer));
+                ui.label(&format!(
+                    "{}",
+                    if let Some(value) = self.value {
+                        value
+                    } else {
+                        self.answer
+                    }
+                ));
             });
 
             ui.horizontal(|ui| {
@@ -118,7 +129,7 @@ impl eframe::App for CalculatorApp {
                 };
                 if ui.button("C").clicked() {
                     self.answer = 0.0;
-                    self.value = 0.0;
+                    self.value = None;
                 };
                 if ui.button("=").clicked() {};
                 if ui.button("+").clicked() {};
