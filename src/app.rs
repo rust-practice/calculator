@@ -1,4 +1,4 @@
-/// We derive Deserialize/Serialize so we can persist app state on shutdown.
+// We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)] // if we add new fields, give them default values when deserializing old state
 pub struct CalculatorApp {
@@ -28,6 +28,10 @@ impl CalculatorApp {
         }
 
         Default::default()
+    }
+
+    fn click_number(&mut self, number: f64) {
+        self.answer = self.answer * 10.0 + number;
     }
 }
 
@@ -63,57 +67,58 @@ impl eframe::App for CalculatorApp {
 
         egui::CentralPanel::default().show(ctx, |ui| {
             // The central panel the region left after adding TopPanel's and SidePanel's
-            ui.heading("calculator");
+            ui.heading("Calculator");
 
-            ui.with_layout(egui::Layout::right_to_left(egui::Align::TOP)., |ui| {
+            ui.with_layout(egui::Layout::right_to_left(egui::Align::TOP), |ui| {
                 ui.label(&format!("{}", self.answer));
             });
 
             ui.horizontal(|ui| {
                 if ui.button("7").clicked() {
-                    self.answer = 7.0
+                    self.click_number(7.0);
                 };
                 if ui.button("8").clicked() {
-                    self.answer = 8.0
+                    self.click_number(8.0);
                 };
                 if ui.button("9").clicked() {
-                    self.answer = 9.0
+                    self.click_number(9.0);
                 };
                 if ui.button("/").clicked() {};
             });
 
             ui.horizontal(|ui| {
                 if ui.button("4").clicked() {
-                    self.answer = 4.0
+                    self.click_number(4.0);
                 };
                 if ui.button("5").clicked() {
-                    self.answer = 5.0
+                    self.click_number(5.0);
                 };
                 if ui.button("6").clicked() {
-                    self.answer = 6.0
+                    self.click_number(6.0);
                 };
                 if ui.button("x").clicked() {};
             });
 
             ui.horizontal(|ui| {
                 if ui.button("1").clicked() {
-                    self.answer = 1.0
+                    self.click_number(1.0);
                 };
                 if ui.button("2").clicked() {
-                    self.answer = 2.0
+                    self.click_number(2.0);
                 };
                 if ui.button("3").clicked() {
-                    self.answer = 3.0
+                    self.click_number(3.0);
                 };
                 if ui.button("-").clicked() {};
             });
 
             ui.horizontal(|ui| {
                 if ui.button("0").clicked() {
-                    self.answer = 0.0
+                    self.click_number(0.0);
                 };
                 if ui.button("C").clicked() {
-                    self.answer = 0.0
+                    self.answer = 0.0;
+                    self.value = 0.0;
                 };
                 if ui.button("=").clicked() {};
                 if ui.button("+").clicked() {};
