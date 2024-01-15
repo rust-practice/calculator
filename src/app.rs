@@ -15,6 +15,14 @@ impl Default for CalculatorApp {
     }
 }
 
+enum Operator {
+    Add,
+    Subtract,
+    Multiply,
+    Divide,
+    Equal,
+}
+
 impl CalculatorApp {
     /// Called once before the first frame.
     pub fn new(cc: &eframe::CreationContext<'_>) -> Self {
@@ -36,6 +44,23 @@ impl CalculatorApp {
         } else {
             Some(number)
         };
+    }
+
+    fn click_operator(&mut self, operator: Operator) {
+        match operator {
+            Operator::Add => {
+                if let Some(value) = self.value {
+                    self.answer += value;
+                    self.value = None;
+                } else {
+                    // TODO: What should happen if there isn't a value
+                }
+            }
+            Operator::Subtract => todo!(),
+            Operator::Multiply => todo!(),
+            Operator::Divide => todo!(),
+            Operator::Equal => todo!(),
+        }
     }
 }
 
@@ -132,7 +157,9 @@ impl eframe::App for CalculatorApp {
                     self.value = None;
                 };
                 if ui.button("=").clicked() {};
-                if ui.button("+").clicked() {};
+                if ui.button("+").clicked() {
+                    self.click_operator(Operator::Add);
+                };
             });
         });
     }
