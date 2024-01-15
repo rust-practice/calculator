@@ -65,7 +65,7 @@ impl eframe::App for CalculatorApp {
             // The central panel the region left after adding TopPanel's and SidePanel's
             ui.heading("calculator");
 
-            ui.horizontal(|ui| {
+            ui.with_layout(egui::Layout::right_to_left(egui::Align::TOP)., |ui| {
                 ui.label(&format!("{}", self.answer));
             });
 
