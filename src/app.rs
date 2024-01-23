@@ -1,20 +1,14 @@
 // We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)] // if we add new fields, give them default values when deserializing old state
+#[derive(Default)]
 pub struct CalculatorApp {
     value: Option<f64>,
-    answer: f64,
+    answer: Option<f64>,
+    last_operation: Option<Operator>,
 }
 
-impl Default for CalculatorApp {
-    fn default() -> Self {
-        Self {
-            value: None,
-            answer: 0.0,
-        }
-    }
-}
-
+#[derive(serde::Deserialize, serde::Serialize)]
 enum Operator {
     Add,
     Subtract,
@@ -49,14 +43,7 @@ impl CalculatorApp {
 
     fn click_operator(&mut self, operator: Operator) {
         match operator {
-            Operator::Add => {
-                if let Some(value) = self.value {
-                    self.answer += value;
-                    self.value = None;
-                } else {
-                    // TODO: What should happen if there isn't a value
-                }
-            }
+            Operator::Add => todo!(),
             Operator::Subtract => todo!(),
             Operator::Multiply => todo!(),
             Operator::Divide => todo!(),
@@ -106,7 +93,7 @@ impl eframe::App for CalculatorApp {
                     if let Some(value) = self.value {
                         value
                     } else {
-                        self.answer
+                        self.answer.unwrap_or_default()
                     }
                 ));
             });
@@ -155,7 +142,7 @@ impl eframe::App for CalculatorApp {
                     self.click_number(0.0);
                 };
                 if ui.button("C").clicked() {
-                    self.answer = 0.0;
+                    self.answer = None;
                     self.value = None;
                 };
                 if ui.button("=").clicked() {};
