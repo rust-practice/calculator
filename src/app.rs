@@ -1,7 +1,7 @@
 // We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)] // if we add new fields, give them default values when deserializing old state
-#[derive(Default)]
+#[derive(Debug, Default)]
 pub struct CalculatorApp {
     value: Option<f64>,
     answer: Option<f64>,
@@ -9,7 +9,7 @@ pub struct CalculatorApp {
     error_message: Option<String>,
 }
 
-#[derive(serde::Deserialize, serde::Serialize)]
+#[derive(serde::Deserialize, serde::Serialize, Clone, Copy, Debug)]
 enum Operator {
     Add,
     Subtract,
@@ -43,18 +43,41 @@ impl CalculatorApp {
     }
 
     fn click_operator(&mut self, operator: Operator) {
-        match operator {
-            Operator::Add => todo!(),
-            Operator::Subtract => todo!(),
-            Operator::Multiply => todo!(),
-            Operator::Divide => todo!(),
-            Operator::Equal => todo!(),
+        type OP = Operator;
+        match (self.answer, self.value, self.last_operation) {
+            (None, None, _) => (),
+            (None, Some(_), None) => {
+                self.last_operation = Some(operator);
+                self.answer = self.value;
+                self.value = None;
+            }
+            (None, Some(_), Some(_)) => {
+                dbg!(&self, operator);
+                self.error_message = Some("Err: Unreachable".to_owned());
+            }
+            (Some(_), None, None) => {
+                dbg!(&self, operator);
+                self.error_message = Some("Err: Unreachable".to_owned());
+            }
+            (Some(_), None, Some(_)) => self.last_operation = Some(operator),
+            (Some(_), Some(_), None) => {
+                dbg!(&self, operator);
+                self.error_message = Some("Err: Unreachable".to_owned());
+            }
+            (Some(_), Some(_), Some(_)) => match operator {
+                OP::Add => todo!(),
+                OP::Subtract => todo!(),
+                OP::Multiply => todo!(),
+                OP::Divide => todo!(),
+                OP::Equal => todo!(),
+            },
         }
     }
 }
 
 impl eframe::App for CalculatorApp {
     /// Called by the frame work to save state before shutdown.
+    fn save(&mut self, storage: &mut dyn eframe::Storage) {
         eframe::set_value(storage, eframe::APP_KEY, self);
     }
 
