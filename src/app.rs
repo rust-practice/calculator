@@ -170,6 +170,8 @@ impl eframe::App for CalculatorApp {
                 if ui.button("C").clicked() {
                     self.answer = None;
                     self.value = None;
+                    // TODO update C for new fields
+                    // TODO ensure we don't miss fields in the future
                 };
                 if ui.button("=").clicked() {};
                 if ui.button("+").clicked() {
@@ -179,3 +181,5 @@ impl eframe::App for CalculatorApp {
         });
     }
 }
+
+// TODO add tests to ensure expected operation and record how program is expected to work

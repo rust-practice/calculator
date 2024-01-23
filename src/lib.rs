@@ -2,3 +2,5 @@
 
 mod app;
 pub use app::CalculatorApp;
+
+// TODO Add history / current calculation display
