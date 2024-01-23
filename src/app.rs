@@ -19,7 +19,7 @@ enum Operator {
 
 impl CalculatorApp {
     /// Called once before the first frame.
-    pub fn new(cc: &eframe::CreationContext<'_>) -> Self {
+    pub fn new(_cc: &eframe::CreationContext<'_>) -> Self {
         // This is also where you can customize the look and feel of egui using
         // `cc.egui_ctx.set_visuals` and `cc.egui_ctx.set_fonts`.
 
@@ -54,7 +54,7 @@ impl CalculatorApp {
 
 impl eframe::App for CalculatorApp {
     /// Called by the frame work to save state before shutdown.
-    fn save(&mut self, storage: &mut dyn eframe::Storage) {
+    fn save(&mut self, _storage: &mut dyn eframe::Storage) {
         // TODO if we decide to show history then we can enable this but off for now
         // eframe::set_value(storage, eframe::APP_KEY, self);
     }
