@@ -6,6 +6,7 @@ pub struct CalculatorApp {
     value: Option<f64>,
     answer: Option<f64>,
     last_operation: Option<Operator>,
+    error_message: Option<String>,
 }
 
 #[derive(serde::Deserialize, serde::Serialize)]
@@ -88,14 +89,18 @@ impl eframe::App for CalculatorApp {
             ui.heading("Calculator");
 
             ui.with_layout(egui::Layout::right_to_left(egui::Align::TOP), |ui| {
-                ui.label(&format!(
-                    "{}",
-                    if let Some(value) = self.value {
-                        value
-                    } else {
-                        self.answer.unwrap_or_default()
-                    }
-                ));
+                if let Some(error_message) = &self.error_message {
+                    ui.label(error_message)
+                } else {
+                    ui.label(&format!(
+                        "{}",
+                        if let Some(value) = self.value {
+                            value
+                        } else {
+                            self.answer.unwrap_or_default()
+                        }
+                    ))
+                };
             });
 
             ui.horizontal(|ui| {
