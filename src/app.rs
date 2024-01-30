@@ -1,3 +1,5 @@
+use log::error;
+
 // We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)] // if we add new fields, give them default values when deserializing old state
@@ -52,16 +54,16 @@ impl CalculatorApp {
                 self.value = None;
             }
             (None, Some(_), Some(_)) => {
-                dbg!(&self, operator);
+                self.log_debug_info_for_operator_click(operator);
                 self.error_message = Some("Err: Unreachable".to_owned());
             }
             (Some(_), None, None) => {
-                dbg!(&self, operator);
+                self.log_debug_info_for_operator_click(operator);
                 self.error_message = Some("Err: Unreachable".to_owned());
             }
             (Some(_), None, Some(_)) => self.last_operation = Some(operator),
             (Some(_), Some(_), None) => {
-                dbg!(&self, operator);
+                self.log_debug_info_for_operator_click(operator);
                 self.error_message = Some("Err: Unreachable".to_owned());
             }
             (Some(_), Some(_), Some(_)) => match operator {
@@ -72,6 +74,10 @@ impl CalculatorApp {
                 OP::Equal => todo!(),
             },
         }
+    }
+
+    fn log_debug_info_for_operator_click(&mut self, operator: Operator) {
+        error!("[current operator received: {:?}] {:?}", operator, self);
     }
 }
 
