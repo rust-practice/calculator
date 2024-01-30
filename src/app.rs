@@ -1,4 +1,4 @@
-use egui::{Button, Vec2};
+use egui::{Button, Layout, RichText, Vec2};
 use log::error;
 
 const BUTTON_SIZE: Vec2 = Vec2::new(60.0, 40.0);
@@ -82,6 +82,21 @@ impl CalculatorApp {
     fn log_debug_info_for_operator_click(&mut self, operator: Operator) {
         error!("[current operator received: {:?}] {:?}", operator, self);
     }
+
+    fn display_value(&self) -> String {
+        if let Some(error_message) = &self.error_message {
+            error_message.clone()
+        } else {
+            format!(
+                "{}",
+                if let Some(value) = self.value {
+                    value
+                } else {
+                    self.answer.unwrap_or_default()
+                }
+            )
+        }
+    }
 }
 
 impl eframe::App for CalculatorApp {
@@ -116,20 +131,11 @@ impl eframe::App for CalculatorApp {
 
         egui::CentralPanel::default().show(ctx, |ui| {
             // The central panel the region left after adding TopPanel's and SidePanel's
-            ui.with_layout(egui::Layout::right_to_left(egui::Align::TOP), |ui| {
-                if let Some(error_message) = &self.error_message {
-                    ui.heading(error_message)
-                } else {
-                    ui.heading(&format!(
-                        "{}",
-                        if let Some(value) = self.value {
-                            value
-                        } else {
-                            self.answer.unwrap_or_default()
-                        }
-                    ))
-                };
-            });
+            ui.allocate_ui_with_layout(
+                Vec2::new(250., 40.),
+                Layout::right_to_left(egui::Align::BOTTOM),
+                |ui| ui.label(RichText::new(self.display_value()).heading()),
+            );
 
             ui.horizontal(|ui| {
                 if ui.add(Button::new("7").min_size(BUTTON_SIZE)).clicked() {
