@@ -138,6 +138,7 @@ impl eframe::App for CalculatorApp {
             );
 
             ui.horizontal(|ui| {
+                // TODO 1: Change buttons to be created by a function
                 if ui.add(Button::new("7").min_size(BUTTON_SIZE)).clicked() {
                     self.click_number(7.0);
                 };
