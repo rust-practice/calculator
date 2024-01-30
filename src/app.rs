@@ -1,5 +1,8 @@
 use log::error;
 
+/// Set size of display (Value is like a percentage)
+const PIXELS_PER_POINT: f32 = 1.75;
+
 // We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)] // if we add new fields, give them default values when deserializing old state
@@ -91,6 +94,7 @@ impl eframe::App for CalculatorApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         // Put your widgets into a `SidePanel`, `TopBottomPanel`, `CentralPanel`, `Window` or `Area`.
         // For inspiration and more examples, go to https://emilk.github.io/egui
+        ctx.set_pixels_per_point(PIXELS_PER_POINT);
 
         egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
             // The top panel is often a good place for a menu bar:
