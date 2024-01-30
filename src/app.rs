@@ -1,4 +1,7 @@
+use egui::{Button, Vec2};
 use log::error;
+
+const BUTTON_SIZE: Vec2 = Vec2::new(60.0, 40.0);
 
 // We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize)]
@@ -113,13 +116,11 @@ impl eframe::App for CalculatorApp {
 
         egui::CentralPanel::default().show(ctx, |ui| {
             // The central panel the region left after adding TopPanel's and SidePanel's
-            ui.heading("Calculator");
-
             ui.with_layout(egui::Layout::right_to_left(egui::Align::TOP), |ui| {
                 if let Some(error_message) = &self.error_message {
-                    ui.label(error_message)
+                    ui.heading(error_message)
                 } else {
-                    ui.label(&format!(
+                    ui.heading(&format!(
                         "{}",
                         if let Some(value) = self.value {
                             value
@@ -131,56 +132,56 @@ impl eframe::App for CalculatorApp {
             });
 
             ui.horizontal(|ui| {
-                if ui.button("7").clicked() {
+                if ui.add(Button::new("7").min_size(BUTTON_SIZE)).clicked() {
                     self.click_number(7.0);
                 };
-                if ui.button("8").clicked() {
+                if ui.add(Button::new("8").min_size(BUTTON_SIZE)).clicked() {
                     self.click_number(8.0);
                 };
-                if ui.button("9").clicked() {
+                if ui.add(Button::new("9").min_size(BUTTON_SIZE)).clicked() {
                     self.click_number(9.0);
                 };
-                if ui.button("/").clicked() {};
+                if ui.add(Button::new("/").min_size(BUTTON_SIZE)).clicked() {};
             });
 
             ui.horizontal(|ui| {
-                if ui.button("4").clicked() {
+                if ui.add(Button::new("4").min_size(BUTTON_SIZE)).clicked() {
                     self.click_number(4.0);
                 };
-                if ui.button("5").clicked() {
+                if ui.add(Button::new("5").min_size(BUTTON_SIZE)).clicked() {
                     self.click_number(5.0);
                 };
-                if ui.button("6").clicked() {
+                if ui.add(Button::new("6").min_size(BUTTON_SIZE)).clicked() {
                     self.click_number(6.0);
                 };
-                if ui.button("x").clicked() {};
+                if ui.add(Button::new("x").min_size(BUTTON_SIZE)).clicked() {}
             });
 
             ui.horizontal(|ui| {
-                if ui.button("1").clicked() {
+                if ui.add(Button::new("1").min_size(BUTTON_SIZE)).clicked() {
                     self.click_number(1.0);
                 };
-                if ui.button("2").clicked() {
+                if ui.add(Button::new("2").min_size(BUTTON_SIZE)).clicked() {
                     self.click_number(2.0);
                 };
-                if ui.button("3").clicked() {
+                if ui.add(Button::new("3").min_size(BUTTON_SIZE)).clicked() {
                     self.click_number(3.0);
                 };
-                if ui.button("-").clicked() {};
+                if ui.add(Button::new("-").min_size(BUTTON_SIZE)).clicked() {};
             });
 
             ui.horizontal(|ui| {
-                if ui.button("0").clicked() {
+                if ui.add(Button::new("0").min_size(BUTTON_SIZE)).clicked() {
                     self.click_number(0.0);
                 };
-                if ui.button("C").clicked() {
+                if ui.add(Button::new("C").min_size(BUTTON_SIZE)).clicked() {
                     self.answer = None;
                     self.value = None;
                     // TODO update C for new fields
                     // TODO ensure we don't miss fields in the future
                 };
-                if ui.button("=").clicked() {};
-                if ui.button("+").clicked() {
+                if ui.add(Button::new("=").min_size(BUTTON_SIZE)).clicked() {};
+                if ui.add(Button::new("+").min_size(BUTTON_SIZE)).clicked() {
                     self.click_operator(Operator::Add);
                 };
             });
