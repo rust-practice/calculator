@@ -22,6 +22,45 @@ enum Operator {
     Divide,
     Equal,
 }
+enum SpecialButton {
+    Clear,
+}
+
+enum ButtonType {
+    Number(f64),
+    Operator(Operator),
+    Special(SpecialButton),
+}
+
+impl std::fmt::Display for SpecialButton {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            SpecialButton::Clear => write!(f, "C"),
+        }
+    }
+}
+impl std::fmt::Display for ButtonType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ButtonType::Number(value) => write!(f, "{value}"),
+            ButtonType::Operator(value) => write!(f, "{value}"),
+            ButtonType::Special(value) => write!(f, "{value}"),
+        }
+    }
+}
+
+impl std::fmt::Display for Operator {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let value = match self {
+            Operator::Add => "+",
+            Operator::Subtract => "-",
+            Operator::Multiply => "x",
+            Operator::Divide => "/",
+            Operator::Equal => "=",
+        };
+        write!(f, "{value}")
+    }
+}
 
 impl CalculatorApp {
     /// Called once before the first frame.
@@ -50,7 +89,7 @@ impl CalculatorApp {
     fn click_operator(&mut self, operator: Operator) {
         type OP = Operator;
         match (self.answer, self.value, self.last_operation) {
-            (None, None, _) => (),
+            (None, None, _) => self.last_operation = Some(operator),
             (None, Some(_), None) => {
                 self.last_operation = Some(operator);
                 self.answer = self.value;
@@ -97,6 +136,29 @@ impl CalculatorApp {
             )
         }
     }
+
+    fn create_button(&mut self, ui: &mut egui::Ui, button_value: ButtonType) {
+        if ui
+            .add(Button::new(format!("{button_value}")).min_size(BUTTON_SIZE))
+            .clicked()
+        {
+            self.click_button(button_value);
+        }
+    }
+
+    fn click_button(&mut self, button_value: ButtonType) {
+        match button_value {
+            ButtonType::Number(number) => self.click_number(number),
+            ButtonType::Operator(operator) => self.click_operator(operator),
+            ButtonType::Special(special) => self.click_special(special),
+        }
+    }
+
+    fn click_special(&mut self, special: SpecialButton) {
+        match special {
+            SpecialButton::Clear => *self = CalculatorApp::default(),
+        }
+    }
 }
 
 impl eframe::App for CalculatorApp {
@@ -131,6 +193,11 @@ impl eframe::App for CalculatorApp {
 
         egui::CentralPanel::default().show(ctx, |ui| {
             // The central panel the region left after adding TopPanel's and SidePanel's
+            ui.label(if let Some(operator) = self.last_operation {
+                format!("{operator}")
+            } else {
+                String::from("")
+            });
             ui.allocate_ui_with_layout(
                 Vec2::new(250., 40.),
                 Layout::right_to_left(egui::Align::BOTTOM),
@@ -138,59 +205,31 @@ impl eframe::App for CalculatorApp {
             );
 
             ui.horizontal(|ui| {
-                // TODO 1: Change buttons to be created by a function
-                if ui.add(Button::new("7").min_size(BUTTON_SIZE)).clicked() {
-                    self.click_number(7.0);
-                };
-                if ui.add(Button::new("8").min_size(BUTTON_SIZE)).clicked() {
-                    self.click_number(8.0);
-                };
-                if ui.add(Button::new("9").min_size(BUTTON_SIZE)).clicked() {
-                    self.click_number(9.0);
-                };
-                if ui.add(Button::new("/").min_size(BUTTON_SIZE)).clicked() {};
+                self.create_button(ui, ButtonType::Number(7.));
+                self.create_button(ui, ButtonType::Number(8.));
+                self.create_button(ui, ButtonType::Number(9.));
+                self.create_button(ui, ButtonType::Operator(Operator::Divide));
             });
 
             ui.horizontal(|ui| {
-                if ui.add(Button::new("4").min_size(BUTTON_SIZE)).clicked() {
-                    self.click_number(4.0);
-                };
-                if ui.add(Button::new("5").min_size(BUTTON_SIZE)).clicked() {
-                    self.click_number(5.0);
-                };
-                if ui.add(Button::new("6").min_size(BUTTON_SIZE)).clicked() {
-                    self.click_number(6.0);
-                };
-                if ui.add(Button::new("x").min_size(BUTTON_SIZE)).clicked() {}
+                self.create_button(ui, ButtonType::Number(4.));
+                self.create_button(ui, ButtonType::Number(5.));
+                self.create_button(ui, ButtonType::Number(6.));
+                self.create_button(ui, ButtonType::Operator(Operator::Multiply));
             });
 
             ui.horizontal(|ui| {
-                if ui.add(Button::new("1").min_size(BUTTON_SIZE)).clicked() {
-                    self.click_number(1.0);
-                };
-                if ui.add(Button::new("2").min_size(BUTTON_SIZE)).clicked() {
-                    self.click_number(2.0);
-                };
-                if ui.add(Button::new("3").min_size(BUTTON_SIZE)).clicked() {
-                    self.click_number(3.0);
-                };
-                if ui.add(Button::new("-").min_size(BUTTON_SIZE)).clicked() {};
+                self.create_button(ui, ButtonType::Number(1.));
+                self.create_button(ui, ButtonType::Number(2.));
+                self.create_button(ui, ButtonType::Number(3.));
+                self.create_button(ui, ButtonType::Operator(Operator::Subtract));
             });
 
             ui.horizontal(|ui| {
-                if ui.add(Button::new("0").min_size(BUTTON_SIZE)).clicked() {
-                    self.click_number(0.0);
-                };
-                if ui.add(Button::new("C").min_size(BUTTON_SIZE)).clicked() {
-                    self.answer = None;
-                    self.value = None;
-                    // TODO update C for new fields
-                    // TODO ensure we don't miss fields in the future
-                };
-                if ui.add(Button::new("=").min_size(BUTTON_SIZE)).clicked() {};
-                if ui.add(Button::new("+").min_size(BUTTON_SIZE)).clicked() {
-                    self.click_operator(Operator::Add);
-                };
+                self.create_button(ui, ButtonType::Number(0.));
+                self.create_button(ui, ButtonType::Special(SpecialButton::Clear));
+                self.create_button(ui, ButtonType::Operator(Operator::Equal));
+                self.create_button(ui, ButtonType::Operator(Operator::Add));
             });
         });
     }
