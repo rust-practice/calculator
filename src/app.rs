@@ -89,13 +89,17 @@ impl CalculatorApp {
     fn click_operator(&mut self, operator: Operator) {
         type OP = Operator;
         match (self.answer, self.value, self.last_operation) {
-            (None, None, _) => self.last_operation = Some(operator),
+            (None, None, _) => {
+                self.answer = Some(0.);
+                self.last_operation = Some(operator)
+            }
             (None, Some(_), None) => {
                 self.last_operation = Some(operator);
                 self.answer = self.value;
                 self.value = None;
             }
             (None, Some(_), Some(_)) => {
+                error!("this should never happen because once we set a last_operation we should also set answer");
                 self.log_debug_info_for_operator_click(operator);
                 self.error_message = Some("Err: Unreachable".to_owned());
             }
