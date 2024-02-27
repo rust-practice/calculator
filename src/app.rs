@@ -237,11 +237,31 @@ impl eframe::App for CalculatorApp {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use rstest::rstest;
+
+    use super::{ButtonType as BT, CalculatorApp, Operator as OP};
 
     #[test]
     fn empty_at_startup() {
         let calc: CalculatorApp = Default::default();
         insta::assert_debug_snapshot!(calc);
+    }
+
+    #[rstest]
+    #[case::add(vec![
+        BT::Number(5.),
+        BT::Operator(OP::Add),
+        BT::Number(6.),
+        BT::Operator(OP::Equal),
+        BT::Operator(OP::Add),
+        BT::Number(5.),
+        BT::Operator(OP::Equal),
+    ])]
+    fn add(#[case] buttons: Vec<BT>) {
+        let mut calc: CalculatorApp = Default::default();
+        for button in buttons {
+            calc.click_button(button);
+            insta::assert_debug_snapshot!(calc);
+        }
     }
 }
