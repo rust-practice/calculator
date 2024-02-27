@@ -261,6 +261,7 @@ mod tests {
         BT::Number(5.),
         BT::Operator(OP::Equal),
     ])]
+    // TODO: Add test cases that start with each of the operators
     fn add(#[case] buttons: Vec<BT>) {
         let mut calc: CalculatorApp = Default::default();
         for button in buttons {
