@@ -1,0 +1,11 @@
+---
+source: src/app.rs
+assertion_line: 245
+expression: calc
+---
+CalculatorApp {
+    value: None,
+    answer: None,
+    last_operation: None,
+    error_message: None,
+}

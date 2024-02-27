@@ -235,4 +235,13 @@ impl eframe::App for CalculatorApp {
     }
 }
 
-// TODO add tests to ensure expected operation and record how program is expected to work
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn empty_at_startup() {
+        let calc: CalculatorApp = Default::default();
+        insta::assert_debug_snapshot!(calc);
+    }
+}
