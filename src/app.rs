@@ -26,6 +26,17 @@ enum Operator {
     Divide,
     Equal,
 }
+impl Operator {
+    fn binary_operation(&self, op1: f64, op2: f64) -> f64 {
+        match self {
+            Operator::Add => op1 + op2,
+            Operator::Subtract => op1 - op2,
+            Operator::Multiply => op1 * op2,
+            Operator::Divide => op1 / op2,
+            Operator::Equal => todo!(),
+        }
+    }
+}
 enum SpecialButton {
     Clear,
 }
@@ -116,12 +127,17 @@ impl CalculatorApp {
                 self.log_debug_info_for_operator_click(operator);
                 self.error_message = Some("Err: Unreachable".to_owned());
             }
-            (Some(_), Some(_), Some(_)) => match operator {
+            (Some(op1), Some(op2), Some(op)) => match operator {
                 OP::Add => todo!(),
                 OP::Subtract => todo!(),
                 OP::Multiply => todo!(),
                 OP::Divide => todo!(),
-                OP::Equal => todo!(),
+                OP::Equal => {
+                    // TODO 3: Right now all our operators are binary but we need to consider how we will deal with unary operators
+                    self.answer = Some(op.binary_operation(op1, op2));
+                    self.value = None;
+                    self.last_operation = Some(operator);
+                }
             },
         }
     }
