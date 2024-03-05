@@ -18,7 +18,7 @@ pub struct CalculatorApp {
     error_message: Option<String>,
 }
 
-#[derive(serde::Deserialize, serde::Serialize, Clone, Copy, Debug)]
+#[derive(serde::Deserialize, serde::Serialize, Clone, Copy, Debug, PartialEq, Eq)]
 enum Operator {
     Add,
     Subtract,
@@ -183,6 +183,27 @@ impl CalculatorApp {
             SpecialButton::Clear => *self = CalculatorApp::default(),
         }
     }
+
+    /// Answer if it is Some followed by last_operator if it is Some unless last operator is "Equal"
+    fn partial_result_display(&self) -> String {
+        if Some(Operator::Equal) == self.last_operation {
+            "".to_string()
+        } else {
+            format!(
+                "{} {}",
+                if let Some(answer) = self.answer {
+                    answer.to_string()
+                } else {
+                    String::new()
+                },
+                if let Some(operator) = self.last_operation {
+                    operator.to_string()
+                } else {
+                    String::new()
+                }
+            )
+        }
+    }
 }
 
 impl eframe::App for CalculatorApp {
@@ -216,12 +237,9 @@ impl eframe::App for CalculatorApp {
         });
 
         egui::CentralPanel::default().show(ctx, |ui| {
-            // The central panel the region left after adding TopPanel's and SidePanel's
-            ui.label(if let Some(operator) = self.last_operation {
-                format!("{operator}")
-            } else {
-                String::from("")
-            });
+            // Small display top left
+            ui.label(self.partial_result_display());
+
             ui.allocate_ui_with_layout(
                 Vec2::new(250., 40.),
                 Layout::right_to_left(egui::Align::BOTTOM),
