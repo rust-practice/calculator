@@ -304,6 +304,7 @@ mod tests {
     fn button_presses(#[case] name: &str, #[case] buttons: Vec<BT>) {
         let mut calc: CalculatorApp = Default::default();
         dbg!(name);
+        // TODO 1: Continue working through the test cases
         for (i, button) in buttons.into_iter().enumerate() {
             calc.click_button(button);
             let name = format!("{name}-{i:02}");
