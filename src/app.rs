@@ -252,7 +252,8 @@ mod tests {
     }
 
     #[rstest]
-    #[case::add(vec![
+    #[case("add",
+    vec![
         BT::Number(5.),
         BT::Operator(OP::Add),
         BT::Number(6.),
@@ -262,11 +263,13 @@ mod tests {
         BT::Operator(OP::Equal),
     ])]
     // TODO: Add test cases that start with each of the operators
-    fn add(#[case] buttons: Vec<BT>) {
+    fn button_presses(#[case] name: &str, #[case] buttons: Vec<BT>) {
         let mut calc: CalculatorApp = Default::default();
-        for button in buttons {
+        dbg!(name);
+        for (i, button) in buttons.into_iter().enumerate() {
             calc.click_button(button);
-            insta::assert_debug_snapshot!(calc);
+            let name = format!("{name}-{i:02}");
+            insta::assert_debug_snapshot!(name, calc);
         }
     }
 }

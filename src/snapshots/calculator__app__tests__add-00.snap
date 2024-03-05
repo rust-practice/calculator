@@ -1,10 +1,12 @@
 ---
 source: src/app.rs
-assertion_line: 251
+assertion_line: 272
 expression: calc
 ---
 CalculatorApp {
-    value: None,
+    value: Some(
+        5.0,
+    ),
     answer: None,
     last_operation: None,
     error_message: None,

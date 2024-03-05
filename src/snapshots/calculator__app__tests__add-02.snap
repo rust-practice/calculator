@@ -1,0 +1,17 @@
+---
+source: src/app.rs
+assertion_line: 272
+expression: calc
+---
+CalculatorApp {
+    value: Some(
+        6.0,
+    ),
+    answer: Some(
+        5.0,
+    ),
+    last_operation: Some(
+        Add,
+    ),
+    error_message: None,
+}
