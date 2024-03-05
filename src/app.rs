@@ -8,9 +8,13 @@ const BUTTON_SIZE: Vec2 = Vec2::new(60.0, 40.0);
 #[serde(default)] // if we add new fields, give them default values when deserializing old state
 #[derive(Debug, Default)]
 pub struct CalculatorApp {
+    /// The number currently being entered
     value: Option<f64>,
+    /// The current possibly partial solution
     answer: Option<f64>,
+    /// The last operator key pressed
     last_operation: Option<Operator>,
+    /// The current error if any
     error_message: Option<String>,
 }
 
